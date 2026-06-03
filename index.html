@@ -602,6 +602,239 @@
     <div class="form-card reveal">
       <h3>Request a Quote</h3>
       <p>We'll get back to you as soon as possible.</p>
+      <form id="quoteForm" action="https://formspree.io/f/xpqezwnr" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Your name" required/>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" placeholder="(619) ..."/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="your@email.com" required/>
+        </div>
+        <div class="form-group">
+          <label>Describe Your Project</label>
+          <textarea name="message" rows="4" placeholder="Tell us about what you need done..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="submitBtn">Send Request →</button>
+        <p id="formSuccess" style="display:none; color:#2ecc71; text-align:center; margin-top:1rem; font-weight:600;">✓ Message sent! We'll be in touch soon.</p>
+        <p id="formError" style="display:none; color:#e74c3c; text-align:center; margin-top:1rem; font-size:0.85rem;">Something went wrong. Please try again or call us directly.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+    <span class="section-label">FAQ</span>
+    <h2 class="section-title">Questions &amp; Answers</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How much do you charge for your services?
+        <span class="arrow">▾</span>
+      </div>
+      <div class="faq-a">We offer both flat-rate and hourly pricing depending on the scope of the job. Contact us with your project details and we'll provide a transparent quote — no hidden fees, ever.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Do you have a license and insurance?
+        <span class="arrow">▾</span>
+      </div>
+      <div class="faq-a">Yes! We are fully licensed and insured so you can have complete peace of mind when we work in your home or office.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Do you work on weekends and holidays?
+        <span class="arrow">▾</span>
+      </div>
+      <div class="faq-a">Absolutely. We work 7 days a week, including weekends, from 8:00 AM to 5:30 PM. We're here when you need us.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What areas of San Diego do you serve?
+        <span class="arrow">▾</span>
+      </div>
+      <div class="faq-a">We serve all of San Diego County. If you're unsure whether we cover your area, just give us a call at (619) 657-6172 and we'll let you know!</div>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top:2.5rem; color:var(--gray); font-size:0.95rem;">
+    Still have questions? Call us at <a href="tel:6196576172" style="color:var(--gold); font-weight:600;">(619) 657-6172</a> or email <a href="mailto:handyhelpers619@gmail.com" style="color:var(--gold); font-weight:600;">handyhelpers619@gmail.com</a>
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Handy<span> Helpers SD</span></div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://instagram.com/handyhelpers619" target="_blank">Instagram</a>
+  </div>
+  <p class="footer-copy">© 2026 Handy Helpers San Diego. All rights reserved.</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // FAQ toggle
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Formspree form submit
+  const form = document.getElementById('quoteForm');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const success = document.getElementById('formSuccess');
+      const error = document.getElementById('formError');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      success.style.display = 'none';
+      error.style.display = 'none';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          success.style.display = 'block';
+          form.reset();
+          btn.textContent = 'Send Request →';
+          btn.disabled = false;
+        } else {
+          throw new Error('Failed');
+        }
+      } catch {
+        error.style.display = 'block';
+        btn.textContent = 'Send Request →';
+        btn.disabled = false;
+      }
+    });
+  }
+
+  // Mobile menu (simple toggle)
+  function toggleMenu(btn) {
+    const links = document.querySelector('.nav-links');
+    if (links.style.display === 'flex') {
+      links.style.display = 'none';
+    } else {
+      links.style.display = 'flex';
+      links.style.flexDirection = 'column';
+      links.style.position = 'fixed';
+      links.style.top = '60px';
+      links.style.left = '0'; links.style.right = '0';
+      links.style.background = 'rgba(13,27,42,0.98)';
+      links.style.padding = '1.5rem 5%';
+      links.style.gap = '1.2rem';
+      links.style.zIndex = '99';
+    }
+  }
+
+  // Close mobile menu on link click
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      const links = document.querySelector('.nav-links');
+      links.style.display = '';
+    });
+  });
+</script>
+</body>
+</html>      <p>Friendliness, professionalism, and trust — every time.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="icon">💰</div>
+      <h3>High Quality + Fair Prices</h3>
+      <p>The formula that everyone wants, and we actually deliver it.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="icon">🌅</div>
+      <h3>Part of the Community</h3>
+      <p>We love working around our beautiful San Diego County.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="icon">💬</div>
+      <h3>Communication is Key</h3>
+      <p>You'll always know where things stand — no guessing, no surprises.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+    <span class="section-label">Testimonials</span>
+    <h2 class="section-title">What Our Clients Say</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"I can't recommend Simon enough for a last-minute move! He was incredibly quick, effective, and efficient while maintaining a high level of professionalism. He even went the extra mile by perfectly mounting a couple of items for me. If you're looking for someone fast, reliable, and skilled, Simon is the one to call!"</p>
+      <div class="review-name">— Mia Elena</div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Simon is in a class all by himself. My wife Jen and I are seniors and have worked with multiple service providers over the years. In all honesty, Simon has a breathtaking quantity of knowledge and skills. His quality of work is unsurpassed."</p>
+      <div class="review-name">— Michael &amp; Jenn</div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Simon was highly professional and thorough in assembling furniture for my office. He completed the work with precision, ensuring everything was spotless and well-organized. He also expertly hung my diplomas, paintings, and curtains. I highly recommend Simon for anyone looking for a skilled and reliable handyman!"</p>
+      <div class="review-name">— Roman</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / QUOTE -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info reveal">
+      <span class="section-label">Get in Touch</span>
+      <h2 class="section-title">Get Your<br>Free Quote!</h2>
+      <p>Share some information about your project and we'll do our best to find the right solution for you. No job too small!</p>
+      <div class="contact-detail">
+        <span class="icon">📞</span>
+        <a href="tel:6196576172">(619) 657-6172</a>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">✉️</span>
+        <a href="mailto:handyhelpers619@gmail.com">handyhelpers619@gmail.com</a>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">🕐</span>
+        <span>Mon – Sun &nbsp;|&nbsp; 8:00 AM – 5:30 PM</span>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">📍</span>
+        <span>San Diego, CA</span>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">📸</span>
+        <a href="https://instagram.com/handyhelpers619" target="_blank">@handyhelpers619</a>
+      </div>
+    </div>
+    <div class="form-card reveal">
+      <h3>Request a Quote</h3>
+      <p>We'll get back to you as soon as possible.</p>
       <div class="form-row">
         <div class="form-group">
           <label>Name</label>
